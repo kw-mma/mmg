@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>병역명문가 자가진단 서비스</title>
+    <!-- Tailwind CSS CDN 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 커스텀 스타일 (폰트 및 색상) */
+        body {
+            font-family: 'Inter', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background-color: #f7f7f7;
+        }
+        /* Steps content transition */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .step-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Modal for fixed positioning */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-height: 80vh;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 min-h-screen flex items-center justify-center">
+
+    <div id="app-container" class="bg-white shadow-2xl rounded-xl p-6 sm:p-10 w-full max-w-xl">
+
+        <h1 class="text-2xl font-extrabold text-center text-blue-700 mb-6 border-b pb-3">
+            병역명문가 자가진단 서비스
+        </h1>
+
+        <!-- Step 1: 시작 및 동의 화면 -->
+        <div id="step1" class="step-content active space-y-6">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+                <p class="font-bold mb-2 text-gray-700">병역명문가란?</p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    3대(할아버지, 아들, 손자) 모두가 현역 복무를 성실히 마친 가문을 말합니다.<br> 본 서비스는 자가진단용이며, 정확한 결과는 병무청 심사 후 확정됩니다.
+                </p>
+            </div>
+            
+            <!-- 이용 약관 텍스트 박스 -->
+            <div class="border border-gray-300 bg-gray-50 p-4 h-40 overflow-y-auto rounded-lg text-sm text-gray-600">
+                <p class="font-bold mb-2 text-gray-700">개인정보 수집 및 이용 동의 (필수)</p>
+                <p>본 자가진단 서비스는 병역명문가 선정 기준 충족 여부를 간략하게 확인하기 위한 목적으로 최소한의 정보만을 수집하며 입력하신 정보는 일체 저장되지 않습니다.</p>
+                <p class="mt-4 text-red-600 font-bold">주의: 본 진단 결과는 참고 자료이며, 실제 결과와 다를 수 있습니다.</p>
+            </div>
+
+            <!-- 동의 체크박스 및 오류 메시지 -->
+            <div class="flex items-start">
+                <input type="checkbox" id="consent-check" class="mt-1 h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                <label for="consent-check" class="ml-3 text-base text-gray-800 select-none cursor-pointer">
+                    위 내용을 모두 확인하였으며, 이에 동의합니다. (필수)
+                </label>
+            </div>
+            <p id="error-message" class="text-sm text-red-500 font-medium hidden" role="alert">
+                자가진단을 시작하려면 반드시 이용 약관에 동의해야 합니다.
+            </p>
+
+            <!-- 시작 버튼 -->
+            <button onclick="startDiagnosis()" id="start-button"
+                    class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
+                자가진단 시작하기
+            </button>
+			<!-- 제출서류 안내 -->
+            <button onclick="goToStep(4)"  class="w-full py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 제출서류안내 </button>
+        </div>
+
+        <!-- Step 2: 자가진단 질문 화면 -->
+        <div id="step2" class="step-content space-y-6">
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+                <p class="font-bold mb-2 text-gray-700">📢 유의사항</p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    ※ 1대(할아버지)를 기준으로 2대(아들), 3대(손자) 직계비속 남성 전원이 현역으로 복무를 마쳐야 합니다.
+                    <img src="./mmg-all.png" alt="명문가3대가계도">
+                </p>
+            </div>
+            
+            <!-- 안내 문구: 공백을 이용하여 두 번째 줄 정렬 -->
+            <p class="text-base text-gray-700 mb-4 text-left">
+                ※ 입력한 정보는 저장되지 않으며, 진단용으로만 사용됩니다.<br>
+                &nbsp;&nbsp;모든 항목을 빠짐없이 선택해 주세요.<br><br>
+            </p>
+
+			
+            <div class="h-px bg-gray-200 my-6"></div>
+
+			
+            <!-- 1대 가족 고정 -->
+           <div class="p-4 bg-yellow-50 rounded-lg border relative">
+                <span class="block font-bold text-gray-800 mb-2">1대(할아버지) : 1명</span>
+
+
+			<div class="absolute top-3 right-3">
+				<div class="relative">
+				<button onclick="toggleTooltip('gen1Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
+                ?
+                </button>
+           	 		<div id="gen1Tooltip" class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
+                		<p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 1대 범위 안내</p>
+                	<ul class="list-disc list-inside space-y-1 text-gray-600">
+                 	   <li>1대<b>(할아버지)</b>는 1분 입니다.</li>
+               	 	</ul>
+				<div width=80%><img src="./mmg-1.gif" alt="1대 범위 안내"></div>
+				<button onclick="toggleTooltip('gen1Tooltip')" class="mt-2 text-xs text-red-500 underline">닫기</button>
+            	</div>
+        		</div>
+    			</div>
+			</div>
+            
+            <!-- 문항 1: 1대 복무 여부 -------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            <div class="space-y-3">
+                <label class="block font-bold text-gray-800">1️⃣ 1대 가족께서 현역 등으로 복무를 마치셨습니까?</label>
+                <div class="flex flex-col space-y-1 text-sm">
+                    <label class="inline-flex items-center"><input type="radio" name="q1" value="yes" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">예 (6·25전쟁 참전, 순국선열, 애국지사 포함)</span></label>
+                    <label class="inline-flex items-center"><input type="radio" name="q1" value="no" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">아니오 (질병·가사사정 등 복무단축된 경우 포함)</span></label>
+                    <label class="inline-flex items-center"><input type="radio" name="q1" value="unknown" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">잘 모르겠음</span></label>
+                </div>
+            </div>
+            
+            <div class="h-px bg-gray-200 my-6"></div>
+            
+            <!-- 2대 인원 입력 -->
+<div class="p-4 bg-yellow-50 rounded-lg border relative">
+    <div class="absolute top-3 right-3"> <div class="relative">
+		<button onclick="toggleTooltip('gen2Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
+                ?
+                </button>
+
+            <div id="gen2Tooltip" 
+                 class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
+                <p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 2대 범위 안내</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600">
+                    <li>1대<b>(할아버지)</b>의 모든 아들</li>
+                    <li>여자 자녀는 제외</li>
+                </ul>
+				<img src="./mmg-2.gif" alt="2대 범위 안내">
+				<button onclick="toggleTooltip('gen2Tooltip')" class="mt-2 text-xs text-red-500 underline">닫기</button>
+            </div>
+        </div>
+    </div>
+
+
+                
+                <label class="block font-bold text-gray-800 mb-2" for="gen2Count">2대(아들)는 총 몇 분인가요?</label>
+                <div class="flex items-center space-x-3">
+                    <input type="number" id="gen2Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center" min="1" placeholder="1" value="1">
+                    <span class="text-gray-700">명</span>
+                    <button class="flex-shrink-0 px-4 py-2 text-sm bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition" onclick="generateGen2Fields()">
+                        인원수 저장
+                    </button>
+                </div>
+            </div>
+
+
+            
+            <!-- 문항 2: 2대 병역이행 사항 (동적 테이블) ----------------------------------------------------------------------------------------------------------------------------------------->
+            <div class="space-y-3">
+                <label class="block font-bold text-gray-800">2️⃣ 2대 가족의 병역이행 사항을 입력해주세요</label>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-gray-300 rounded-lg overflow-hidden" id="tableGen2">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2 border-r border-gray-300" width="20%">관계</th>
+                                <th class="p-2">병역이행</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyGen2" class="divide-y divide-gray-200">
+                            <!-- JS에 의해 동적으로 내용이 채워짐 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="h-px bg-gray-200 my-6"></div>
+            
+            <!-- 3대 인원 입력 -->
+<div class="p-4 bg-yellow-50 rounded-lg border relative">
+    <div class="absolute top-3 right-3">
+	<div class="relative">
+		<button onclick="toggleTooltip('gen3Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
+                ?
+                </button>
+           	 	<div id="gen3Tooltip" class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
+                		<p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 3대 범위 안내</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600">
+                    <li>1대<b>(할아버지)</b>의 모든 친손자</li>
+                    <li>외손자는 제외</li>
+                </ul>
+				<img src="./mmg-3.gif" alt="2대 범위 안내">
+				<button onclick="toggleTooltip('gen3Tooltip')" class="mt-2 text-xs text-red-500 underline">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <label class="block font-bold text-gray-800 mb-2" for="gen3Count">3대(손자)는 총 몇 분인가요?</label>
+    
+    <div class="flex items-center space-x-3">
+        <input type="number" id="gen3Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-400 outline-none" min="1" placeholder="1" value="1">
+        <span class="text-gray-700">명</span>
+        <button class="flex-shrink-0 px-4 py-2 text-sm bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-md" onclick="generateGen3Fields()">
+            인원수 저장
+        </button>
+    </div>
+</div>
+
+                        
+            <!-- 문항 3: 3대 병역이행 사항 (동적 테이블) ------------------------------------------------------------------------------------------------------------------------------------>
+            <div class="space-y-3">
+                <label class="block font-bold text-gray-800">3️⃣ 3대 가족의 병역이행 사항을 입력해주세요</label>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-gray-300 rounded-lg overflow-hidden" id="tableGen3">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2 border-r border-gray-300" width="20%">관계</th>
+                                <th class="p-2">병역이행</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyGen3" class="divide-y divide-gray-200">
+                            <!-- JS에 의해 동적으로 내용이 채워짐 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="h-px bg-gray-200 my-6"></div>
+            
+            <!-- 문항 4: 불명예 사유 ------------------------------------------------------------------------------------------------------------------------------------>
+            <div class="space-y-3">
+                <label class="block font-bold text-gray-800">4️⃣ 복무 중에 군복무 면탈, 불명예 제대 등의 사유가 있는 가족이 있습니까?</label>
+                <div class="flex flex-col space-y-1 text-sm">
+                    <label class="inline-flex items-center"><input type="radio" name="q4" value="no" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">없음</span></label>
+                    <label class="inline-flex items-center"><input type="radio" name="q4" value="yes" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">있음</span></label>
+                    <label class="inline-flex items-center"><input type="radio" name="q4" value="unknown" class="form-radio text-blue-600 h-4 w-4"> <span class="ml-2">잘 모르겠음</span></label>
+                </div>
+            </div>
+            <div class="h-px bg-gray-200 my-6"></div>
+            <button onclick="openModal('guideModal')"
+                    class="w-full py-2 px-4 text-blue-600 font-semibold border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out">
+                선정 대상 및 제외 사유 상세 확인
+            </button>
+            <button onclick="calculateResult()"
+                    class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
+                결과 확인하기
+            </button>
+            <!-- 이전 단계로 가기 버튼 -->
+            <button onclick="goToStep(1)"
+                    class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150 ease-in-out">
+                이전 단계로 가기 (약관 동의)
+            </button>
+        </div>
+
+        <!-- Step 3: Result -->
+        <div id="step3" class="step-content space-y-6 text-center">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">자가진단 결과</h2>
+            
+            <div id="resultArea" class="space-y-4">
+                <!-- 결과 카드가 여기에 렌더링됨 -->
+            </div>
+            
+            <div id="failOrUnsureOptions" class="space-y-3 hidden">
+                 <button class="w-full py-2 px-4 text-blue-600 font-semibold border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out" onclick="openModal('guideModal')">
+                     선정 대상 및 비대상 상세기준 보기
+                 </button>
+            </div>
+            
+            <!-- 성공 시에만 표시되는 버튼 -->
+            <button class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md hidden" 
+                    id="applicationBtn" onclick="goToStep(4)">
+                병역명문가 신청하기
+            </button>
+            
+            <!-- 이전 단계로 가기 버튼 -->
+            <button class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150 ease-in-out" onclick="goToStep(2)">
+                이전 단계로 가기 (입력 수정)
+            </button>
+            <!-- 자가진단 처음으로 버튼 -->
+            <button class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150 ease-in-out" onclick="goToStep(1)">
+                자가진단 처음으로
+            </button>
+        </div>
+        
+        <!-- Step 4: Application Guide (신청 안내) -->
+        <div id="step4" class="step-content space-y-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">병역명문가 신청 안내</h2>
+            
+            <!-- 1. 제출서류 안내 -->
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 class="text-lg font-bold text-blue-800 mb-3">1. 제출서류 안내</h3>
+                <ul class="list-none space-y-2 text-sm text-gray-700">
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-red-600">[필수]</span> 병역명문가 신청서
+                    </li>
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-red-600">[필수]</span> 개인정보 수집·이용동의서
+                    </li>
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-red-600">[필수]</span> 1대 조부(할아버지) 기준 제적등본, 가족관계증명서(상세)
+                    </li>
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-red-600">[필수]</span> 2대 부, 백부, 숙부 기준 가족관계증명서(상세) 각 1부
+                    </li>
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-green-600">[선택]</span> 개인정보 제공 동의서(현재 장교, 준·부사관으로 복무 중인 경우)
+                    </li>
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold text-green-600">[선택]</span> 복무확인서(현재 장교, 준·부사관으로 복무 중인 경우)
+                    </li>                     
+                </ul>
+            </div>
+            
+            <!-- 2. 온라인 신청하기 버튼 (URL 유지) -->
+            <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22402')"
+                    class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
+                2. 온라인 신청하기 (바로가기)
+            </button>
+            
+            <!-- 3. 우편/방문 신청하기 버튼 (URL 유지) -->
+            <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22210')"
+                    class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
+                3. 우편·방문 신청하기 (서식 다운로드)
+            </button>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+            
+            <button class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150 ease-in-out" onclick="goToStep(1)">
+                자가진단 처음으로
+            </button>
+        </div>
+
+        <!-- Modal for Selection Guide (guideModal) -->
+        <div id="guideModal" class="modal">
+            <!-- max-w-lg를 max-w-2xl로 확장하여 모달 크기를 키움 -->
+            <div class="modal-content bg-white p-6 rounded-xl shadow-2xl w-11/12 max-w-2xl"> 
+                <button class="float-right text-gray-500 text-3xl font-bold hover:text-gray-800" onclick="closeModal('guideModal')">&times;</button>
+                <h3 class="text-2xl font-bold text-blue-700 mb-4">병역명문가 선정 기준</h3>
+                
+                <h4 class="font-bold text-lg mt-4 mb-2">선정 대상</h4>
+                <div class="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-gray-700">
+                    <p class="mb-2">3대 가족(조부, 부·백부·숙부, 본인·형제·사촌형제)이 모두 현역복무 등을 성실히 마친 가문</p>
+                    <!-- list-inside 제거 및 pl-6 설정으로 텍스트 정렬 개선 -->
+                    <ul class="list-disc space-y-1 pl-6"> 
+                        <li>현역(전투·의무·해양경찰, 경비교도대원, 의무소방원, 상근예비역 포함)복무를 마쳤거나,<br>장교, 준·부사관 중 의무복무기간(군인사법 제7조)을 마친 후 계속 복무 중인 사람</li>
+                        <li>6·25 전쟁에 참전한 사람, 한국광복군·독립군 활동 등 독립유공자</li>
+                    </ul>
+                </div>
+                
+                <h4 class="font-bold text-lg mt-4 mb-2">주요 제외 사유</h4>
+                <ul class="list-disc space-y-2 text-sm text-gray-600 py-3 pr-4 pl-8 bg-red-50 border border-red-200 rounded-lg text-left">
+                    <li>방위병, 사회복무요원, 전문연구·산업기능요원 등 보충역</li>
+                    <li>교대예비역 하사(RNTC), 자연계교원요원, 귀휴전역(정교사) 등 단기간 군 복무한 사람</li>
+                    <li>군복무 중 질병, 가사 등의 사유로 복무기간이 단축된 경우</li>
+                    <li>병역판정검사·입영 기피, 병역면탈, 군 복무 중 군무 이탈(탈영 등) 사실이 있는 경우</li>
+                    <li>가족 중 병역을 이행하지 않은 국적상실 또는 국적이탈을 한 사람이 있는 경우</li>
+                    <li>가족 중 병역판정검사 연령 이후 사망하여 병역의무를 이행하지 않은 사람이 있는 경우<br>(병역판정검사 연령이 되기 전에 사망한 경우는 신청 가능)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Custom Alert Modal (messageModal) -->
+        <div id="messageModal" class="modal">
+            <div class="modal-content bg-white p-6 rounded-xl shadow-2xl w-11/12 max-w-sm text-center">
+                <h4 id="messageTitle" class="text-xl font-bold text-blue-700 mb-3">안내</h4>
+                <p id="messageBody" class="text-gray-700 mb-4"></p>
+                <button class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="closeModal('messageModal')">확인</button>
+            </div>
+        </div>
+	</div>
+    <script>
+        // 전역 변수 설정 (getElementById 호출을 줄이기 위해)
+        const consentCheck = document.getElementById('consent-check');
+        const errorMessage = document.getElementById('error-message');
+        
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step4 = document.getElementById('step4');
+        const steps = [step1, step2, step3, step4];
+
+        /**
+         * 화면(Step)을 전환하는 함수.
+         * @param {number} stepNumber - 이동할 단계 번호 (1, 2, 3, 4)
+         */
+        function goToStep(stepNumber) {
+            steps.forEach((step, index) => {
+                if (index + 1 === stepNumber) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            window.scrollTo(0, 0); // 화면 상단으로 스크롤 이동
+        }
+
+        /**
+         * '자가진단 시작하기' 버튼 클릭 시 실행되는 함수.
+         * 동의 여부를 확인하고 Step 2로 전환합니다.
+         */
+        function startDiagnosis() {
+            if (consentCheck.checked) {
+                errorMessage.classList.add('hidden');
+                goToStep(2);
+            } else {
+                errorMessage.classList.remove('hidden');
+            }
+        }
+        
+        // 동의 체크박스 상태가 변경될 때마다 오류 메시지 숨기기 (사용자 경험 개선)
+        if (consentCheck) {
+            consentCheck.addEventListener('change', () => {
+                if (consentCheck.checked) {
+                    errorMessage.classList.add('hidden');
+                }
+            });
+        }
+
+
+        /* --- Modal Logic: 모달 표시/숨김 및 커스텀 알림 처리 --- */
+        function openModal(id) {
+            document.getElementById(id).style.display = "flex"; // flex로 설정하여 중앙 정렬 적용
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        // Custom Alert 기능을 사용하여 alert() 사용을 대체
+        function showAlert(message) {
+            document.getElementById('messageBody').textContent = message;
+            openModal('messageModal');
+        }
+        
+        /**
+         * 외부 링크를 새 창으로 여는 함수 (모바일에서도 잘 연동되도록 _blank 사용)
+         * @param {string} url - 열고자 하는 URL
+         */
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+
+        // 모달창 배경 클릭 시 닫기
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+
+        /* --- Dynamic Rows - 2대 가족 정보 입력란 생성 --- */
+        function generateGen2Fields() {
+            const countInput = document.getElementById('gen2Count');
+            const count = parseInt(countInput.value);
+            const tbody = document.getElementById('tbodyGen2');
+            tbody.innerHTML = ''; 
+
+            if(isNaN(count) || count < 1) {
+                showAlert('2대 가족은 최소 1명 이상이어야 합니다.');
+                countInput.value = 1; 
+                generateGen2Fields();
+                return;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition";
+                tr.innerHTML = `
+                    <td class="p-2 border-r border-gray-200 text-center">
+                        아들 ${i+1}
+                    </td>
+                    <td class="p-2">
+                        <select class="gen2-service w-full p-1 border border-gray-300 rounded-md bg-white">
+                            <option value="">복무 상태 선택</option>
+                            <!-- 현역 복무 완료(만기 전역) -->
+                            <option value="active">현역 복무 완료(만기 전역)</option>
+                            <!-- 현역 복무중(장교,준·부사관) -->
+                            <option value="serving_officer_or_nco">현역 복무중(장교,준·부사관)</option>
+                            <!-- 방위병·보충역 (제외 사유) -->
+                            <option value="defense">방위병·공익(사회복무요원)</option>
+                            <option value="unknown">모름 / 해당 없음</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+
+/**
+ * 특정 ID를 가진 요소의 hidden 클래스를 토글하여 팝업을 열고 닫음
+ * @param {string} id - 토글할 요소의 ID
+ */
+function toggleTooltip(id) {
+    const tooltip = document.getElementById(id);
+    if (tooltip) {
+        tooltip.classList.toggle('hidden');
+    }
+}
+
+
+
+        
+        /* --- Dynamic Rows - 3대 가족 정보 입력란 생성 --- */
+        function generateGen3Fields() {
+            const countInput = document.getElementById('gen3Count');
+            const count = parseInt(countInput.value);
+            const tbody = document.getElementById('tbodyGen3');
+            tbody.innerHTML = ''; 
+
+            if(isNaN(count) || count < 1) {
+                showAlert('3대 가족은 최소 1명 이상이어야 합니다.');
+                countInput.value = 1;
+                generateGen3Fields();
+                return;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition";
+                tr.innerHTML = `
+                    <td class="p-2 border-r border-gray-200 text-center">
+                        손자 ${i+1}
+                    </td>
+                    <td class="p-2">
+                        <select class="gen3-service w-full p-1 border border-gray-300 rounded-md bg-white">
+                            <option value="">복무 상태 선택</option>
+                            <!-- 현역 복무 완료(만기 전역) -->
+                            <option value="active">현역 복무 완료(만기 전역)</option>
+                            <option value="serving_officer">현역 복무중(장교·부사관)</option>
+                            <!-- 병사로 복무중인 경우 (복무 완료가 아니므로 제외 사유) -->
+                            <option value="serving_soldier">현역 복무중(병사)</option>
+                            <!-- 보충역 (제외 사유) -->
+                            <option value="supplement">사회복무요원</option>
+                            <option value="unknown">모름 / 해당 없음</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+
+        
+        /* --- Calculation - 최종 결과 계산 및 표시 --- */
+        function calculateResult() {
+            // 1. 입력 요소 가져오기
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+            const gen2Services = document.querySelectorAll('.gen2-service');
+            const gen3Services = document.querySelectorAll('.gen3-service');
+            
+            // 2. 필수 라디오 버튼 항목 검사
+            if (!q1 || !q4) {
+                showAlert('1대 조부 및 면탈 사유 등 필수 문항(Q1, Q4)에 답변해주세요.');
+                return;
+            }
+
+            // 3. 2대 및 3대 인원 확인 및 답변 완료 여부 검사
+            if (gen2Services.length === 0 || gen3Services.length === 0) {
+                showAlert('2대 및 3대 인원수를 입력하고 "입력란 생성"을 눌러 답변을 준비해주세요.');
+                return;
+            }
+            
+            let isFail = false;
+            let isUnsure = false; // '모름' 또는 '복무중' 등 추가 확인 필요한 경우
+
+            // Q1 (1대 조부) 검사
+            if (q1.value === 'no') isFail = true;
+            if (q1.value === 'unknown') isUnsure = true;
+
+            // Q2 (2대) 검사
+            try {
+                gen2Services.forEach(select => {
+                    // 관계 또는 복무 상태를 선택하지 않은 경우
+                    //if (select.value === '' || select.closest('tr').querySelector('.gen2-rel').value === '') { 
+                        //throw new Error("Incomplete Gen 2");
+                    //}
+                    // 방위병/보충역은 명문가 제외 사유
+                    if (select.value === 'defense') isFail = true;
+                    // '현역 복무중(장교,준·부사관)' 또는 '모름'은 추가 확인 필요
+                    if (select.value === 'serving_officer_or_nco' || select.value === 'unknown') isUnsure = true;
+                });
+            } catch(e) {
+                if(e.message === "Incomplete Gen 2") {
+                    showAlert('2대 가족의 모든 병역사항을 선택해야 합니다.');
+                    return;
+                }
+            }
+
+
+            // Q3 (3대) 검사
+            try {
+                gen3Services.forEach(select => {
+                    // 관계 또는 복무 상태를 선택하지 않은 경우
+                    //if (select.value === '' || select.closest('tr').querySelector('.gen3-rel').value === '') { 
+                        //throw new Error("Incomplete Gen 3");
+                    //}
+                    // 보충역 또는 현역 복무중(병사)는 명문가 제외 사유 (병역명문가는 복무 완료 기준)
+                    if (select.value === 'supplement' || select.value === 'serving_soldier') isFail = true;
+                    
+                    // 현역 복무중(장교/부사관), 모름은 추가 확인 필요
+                    if (select.value === 'unknown' || select.value === 'serving_officer') isUnsure = true;
+                });
+            } catch(e) {
+                if(e.message === "Incomplete Gen 3") {
+                    showAlert('3대 가족의 모든 병역사항을 선택해야 합니다.');
+                    return;
+                }
+            }
+            
+            // 모든 2대/3대 가족이 '현역 복무 완료(만기 전역)'를 선택했는지 최종 확인
+            // isFail이나 isUnsure가 true가 되지 않았다면, 모든 선택이 'active' (현역 복무 완료)여야 한다.
+            if (!isFail && !isUnsure) {
+                let allActive = true;
+                document.querySelectorAll('.gen2-service, .gen3-service').forEach(select => {
+                    // 'active' (현역 복무 완료(만기 전역))이 아닌 경우 실패 또는 확인 필요로 간주
+                    if (select.value !== 'active') {
+                        // isFail, isUnsure가 모두 false인 상태에서 'active'가 아닌 다른 값이 나왔다면
+                        // 이는 논리적으로 오류이거나 isFail 또는 isUnsure로 이미 걸러졌어야 함.
+                        // 안전하게 fail로 처리하여 신청 안내로 넘어가지 않도록 방지.
+                        allActive = false;
+                    }
+                });
+                if (!allActive) isFail = true;
+            }
+
+
+            // Q4 (면탈/불명예) 검사
+            if (q4.value === 'yes') isFail = true;
+            if (q4.value === 'unknown') isUnsure = true;
+
+            // 4. 최종 결과 결정 (실패 > 확인 필요 > 성공 순으로 우선순위)
+            let resultHTML = '';
+            const resultArea = document.getElementById('resultArea');
+            const optionsDiv = document.getElementById('failOrUnsureOptions');
+            const applicationBtn = document.getElementById('applicationBtn');
+
+            if (isFail) {
+                // 실패 결과
+                resultHTML = `
+                    <div class="p-6 rounded-xl border-2 border-red-500 bg-red-50">
+                        <span class="block text-5xl mb-3 text-red-500">❌</span>
+                        <div class="text-xl font-bold text-red-800 mb-2">병역명문가 요건에 해당하지 않습니다.</div>
+                        <div class="text-sm text-gray-700">가족 중 현역 복무를 완료하지 않았거나, 제외 사유에 해당하는 분이 있습니다. 상세 기준을 확인해주세요.</div>
+                    </div>
+                `;
+                optionsDiv.classList.remove('hidden');
+                applicationBtn.classList.add('hidden');
+            } else if (isUnsure) {
+                // 확인 필요 결과
+                resultHTML = `
+                    <div class="p-6 rounded-xl border-2 border-yellow-500 bg-yellow-50">
+                        <span class="block text-5xl mb-3 text-yellow-500">⚠️</span>
+                        <div class="text-xl font-bold text-yellow-800 mb-2">정확한 확인이 필요합니다.</div>
+                        <div class="text-sm text-gray-700">'잘 모르겠음' 또는 '복무중' 항목을 선택하셨습니다.<br>병무민원상담소(1588-9090) 또는 지방병무(지)청에 문의해주세요.</div>
+                    </div>
+                `;
+                optionsDiv.classList.remove('hidden');
+                applicationBtn.classList.add('hidden');
+            } else {
+                // 성공 결과
+                resultHTML = `
+                    <div class="p-6 rounded-xl border-2 border-green-500 bg-green-50">
+                        <span class="block text-5xl mb-3 text-green-500">✅</span>
+                        <div class="text-xl font-bold text-green-800 mb-2">병역명문가 신청 가능 대상입니다!</div>
+                        <div class="text-sm text-gray-700">3대 모두 현역 복무를 성실히 마쳤습니다.<br>이제 신청 안내를 확인하고 신청을 진행하세요.</div>
+                    </div>
+                `;
+                optionsDiv.classList.add('hidden');
+                applicationBtn.classList.remove('hidden');
+            }
+
+            resultArea.innerHTML = resultHTML;
+            goToStep(3); // 결과 화면으로 이동
+        }
+
+        // 초기 로드 시 2, 3대 필드를 기본값(1)으로 미리 생성 (사용자 편의)
+        // DOMContentLoaded를 사용하여 HTML 요소가 로드된 후에 스크립트 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            // Step 1이 초기화 시점에 active 상태이므로, Step 2에서 사용할 필드를 준비해둡니다.
+            const gen2Count = document.getElementById('gen2Count');
+            const gen3Count = document.getElementById('gen3Count');
+
+            if (gen2Count) gen2Count.value = 1;
+            if (gen3Count) gen3Count.value = 1;
+            
+            // 요소가 존재하는지 확인 후 함수 호출
+            if (document.getElementById('tbodyGen2')) generateGen2Fields(); 
+            if (document.getElementById('tbodyGen3')) generateGen3Fields(); 
+            
+            // 초기 화면을 Step 1로 설정 (보험용)
+            goToStep(1);
+        });
+
+    </script>
+</body>
+</html>
