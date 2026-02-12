@@ -78,12 +78,12 @@
             </p>
 
             <!-- 시작 버튼 -->
-            <button onclick="startDiagnosis()" id="start-button"
-                    class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
-                자가진단 시작하기
-            </button>
+            <button onclick="startDiagnosis()" id="start-button" class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"> 자가진단 시작하기 </button>
 			<!-- 제출서류 안내 -->
             <button onclick="goToStep(4)"  class="w-full py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 제출서류안내 </button>
+			<!-- 담당자 안내 -->
+            <button onclick="goToStep(5)"  class="w-full py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 지방병무(지)청 담당자 연락처 </button>
+
         </div>
 
         <!-- Step 2: 자가진단 질문 화면 -->
@@ -301,7 +301,7 @@
         </div>
         
         <!-- Step 4: Application Guide (신청 안내) -->
-        <div id="step4" class="step-content space-y-6">
+        <div id="step4" class="step-content space-y-6 text-center">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">병역명문가 신청 안내</h2>
             
             <!-- 1. 제출서류 안내 -->
@@ -343,6 +343,33 @@
             <button class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition duration-150 ease-in-out" onclick="goToStep(1)">
                 자가진단 처음으로
             </button>
+        </div>
+
+
+        <!-- Step 5: 지방병무(지)청 담당자 연락처 -->
+        <div id="step5" class="step-content space-y-6 text-center">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">지방병무(지)청 담당자 연락처</h2>
+            
+            <!-- 1. 담당자 안내 -->
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <ul class="list-none space-y-2 text-sm text-gray-700">
+                    <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                        <span class="font-semibold">서울청</span> 02)820-4344
+                    </li>
+                </ul>
+				<table class="w-full text-sm border border-gray-300 rounded-lg overflow-hidden">
+					<thead class="bg-gray-100">
+						<tr>
+							<th class="p-2 border-r border-gray-300" width="20%">기관명</th>
+							<th class="p-2">연락처</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-200">
+						<td class="p-2 border-r border-gray-200 text-center">서울청</td>
+						<td class="p-2 border-r border-gray-200 text-center">02)820-4344</td>
+					</tbody>
+				</table>
+            </div>
         </div>
 
         <!-- Modal for Selection Guide (guideModal) -->
@@ -398,7 +425,8 @@
         const step2 = document.getElementById('step2');
         const step3 = document.getElementById('step3');
         const step4 = document.getElementById('step4');
-        const steps = [step1, step2, step3, step4];
+		const step5 = document.getElementById('step5');
+        const steps = [step1, step2, step3, step4, step5];
 
         /**
          * 화면(Step)을 전환하는 함수.
