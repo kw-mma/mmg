@@ -669,29 +669,11 @@ function toggleTooltip(id) {
             } else if (isUnsure) {
                 // 확인 필요 결과
                 resultHTML = `
-                    <div class="p-6 rounded-xl border-2 border-yellow-500 bg-yellow-50 relative">
+                    <div class="p-6 rounded-xl border-2 border-yellow-500 bg-yellow-50">
                         <span class="block text-5xl mb-3 text-yellow-500">⚠️</span>
                         <div class="text-xl font-bold text-yellow-800 mb-2">정확한 확인이 필요합니다.</div>
                         <div class="text-sm text-gray-700">'잘 모르겠음' 또는 '복무중' 항목을 선택하셨습니다.<br>병무민원상담소(1588-9090) 또는 지방병무(지)청에 문의해주세요.</div>
                     </div>
-
-
-    <div class="absolute top-3 right-3"> <div class="relative">
-		<button onclick="toggleTooltip('gen2Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
-                ?
-                </button>
-
-            <div id="gen2Tooltip" 
-                 class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
-                <p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 지방병무(지)청 연락처</p>
-                <ul class="list-disc list-inside space-y-1 text-gray-600">
-                    <li>1대<b>(할아버지)</b>의 모든 아들</li>
-                    <li>여자 자녀는 제외</li>
-                </ul>
-				<button onclick="toggleTooltip('gen2Tooltip')" class="mt-2 text-xs text-red-500 underline">닫기</button>
-            </div>
-        </div>
-    </div>
                 `;
                 optionsDiv.classList.remove('hidden');
                 applicationBtn.classList.add('hidden');
