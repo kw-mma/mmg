@@ -332,7 +332,7 @@
             </button>
             
             <!-- 3. 우편/방문 신청하기 버튼 (URL 유지) -->
-            <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22210')"
+            <button onclick="openLink('https://mma.go.kr/gangwon/board/boardView.do?gesipan_id=7&gsgeul_no=1521480&pageIndex=1&pageUnit=10&mc=usr0000045&jbc_gonggibodo=0')"
                     class="w-full py-2 px-4 my-1 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
                 3. 우편·방문 신청하기 (서식 다운로드)
             </button>
@@ -548,7 +548,7 @@
 
             if(isNaN(count) || count < 1) {
                 showAlert('2대 가족은 최소 1명 이상이어야 합니다.');
-                countInput.value = 1; 
+                countInput.value = 0; 
                 generateGen2Fields();
                 return;
             }
@@ -601,7 +601,7 @@ function toggleTooltip(id) {
 
             if(isNaN(count) || count < 1) {
                 showAlert('3대 가족은 최소 1명 이상이어야 합니다.');
-                countInput.value = 1;
+                countInput.value = 0;
                 generateGen3Fields();
                 return;
             }
