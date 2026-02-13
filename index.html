@@ -257,13 +257,13 @@
                 </div>
             </div>
             <div class="h-px bg-gray-200 my-6"></div>
-            <button onclick="openModal('guideModal')"
-                    class="w-full py-2 px-4 text-blue-600 font-semibold border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out">
-                선정 대상 및 제외 사유 상세 확인
-            </button>
             <button onclick="calculateResult()"
                     class="w-full py-2 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
                 결과 확인하기
+            </button>
+            <button onclick="openModal('guideModal')"
+                    class="w-full py-2 px-4 text-blue-600 font-semibold border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out">
+                선정 대상 및 제외 사유 상세 확인
             </button>
             <!-- 이전 단계로 가기 버튼 -->
             <button onclick="goToStep(1)"
@@ -273,7 +273,7 @@
         </div>
 
         <!-- Step 3: Result -->
-        <div id="step3" class="step-content space-y-6 text-center">
+        <div id="step3" class="step-content space-y-1 text-center">
             <h3 class="text-lg font-bold text-blue-800 mb-3 text-left">자가진단 결과</h3>
             
             <div id="resultArea" class="space-y-4">
