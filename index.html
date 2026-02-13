@@ -106,7 +106,7 @@
             <div class="h-px bg-gray-200 my-6"></div>
 
 			
-            <!-- 1대 가족 고정 -->
+            <!-- 1대 가족 고정 ---------------------------------------------------------------------------------------------------------------------------------------------------------------->
            <div class="p-4 bg-yellow-50 rounded-lg border relative">
                 <span class="block font-bold text-gray-800 mb-2">1대(할아버지) : 1명</span>
 
@@ -128,7 +128,7 @@
     			</div>
 			</div>
             
-            <!-- 문항 1: 1대 복무 여부 -------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            <!-- 문항 1: 1대 복무 여부 -->
             <div class="space-y-3">
                 <label class="block font-bold text-gray-800">1️⃣ 1대(할아버지)께서 현역 등으로 복무를 마쳤습니까?</label>
                 <div class="flex flex-col space-y-1 text-sm">
@@ -140,7 +140,7 @@
             
             <div class="h-px bg-gray-200 my-6"></div>
             
-            <!-- 2대 인원 입력 -->
+            <!-- 2대 인원 입력 ---------------------------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="p-4 bg-yellow-50 rounded-lg border relative">
     <div class="absolute top-3 right-3"> <div class="relative">
 		<button onclick="toggleTooltip('gen2Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
@@ -174,7 +174,7 @@
 
 
             
-            <!-- 문항 2: 2대 병역이행 사항 (동적 테이블) ----------------------------------------------------------------------------------------------------------------------------------------->
+            <!-- 문항 2: 2대 병역이행 사항 (동적 테이블) -->
             <div class="space-y-3">
                 <label class="block font-bold text-gray-800">2️⃣ 2대(아들)의 병역이행 사항을 입력해주세요</label>
                 <div class="overflow-x-auto">
@@ -194,7 +194,7 @@
 
             <div class="h-px bg-gray-200 my-6"></div>
             
-            <!-- 3대 인원 입력 -->
+            <!-- 3대 인원 입력 ------------------------------------------------------------------------------------------------------------------------------------>
 <div class="p-4 bg-yellow-50 rounded-lg border relative">
     <div class="absolute top-3 right-3">
 	<div class="relative">
@@ -225,7 +225,7 @@
 </div>
 
                         
-            <!-- 문항 3: 3대 병역이행 사항 (동적 테이블) ------------------------------------------------------------------------------------------------------------------------------------>
+            <!-- 문항 3: 3대 병역이행 사항 (동적 테이블) -->
             <div class="space-y-3">
                 <label class="block font-bold text-gray-800">3️⃣ 3대(손자)의 병역이행 사항을 입력해주세요</label>
                 <div class="overflow-x-auto">
@@ -548,7 +548,7 @@
 
             if(isNaN(count) || count < 1) {
                 showAlert('2대 가족은 최소 1명 이상이어야 합니다.');
-                countInput.value = 0; 
+                countInput.value = 1; 
                 generateGen2Fields();
                 return;
             }
@@ -601,7 +601,7 @@ function toggleTooltip(id) {
 
             if(isNaN(count) || count < 1) {
                 showAlert('3대 가족은 최소 1명 이상이어야 합니다.');
-                countInput.value = 0;
+                countInput.value = 1;
                 generateGen3Fields();
                 return;
             }
@@ -684,9 +684,9 @@ function toggleTooltip(id) {
             try {
                 gen3Services.forEach(select => {
                     // 관계 또는 복무 상태를 선택하지 않은 경우
-                    //if (select.value === '' || select.closest('tr').querySelector('.gen3-rel').value === '') { 
-                        //throw new Error("Incomplete Gen 3");
-                    //}
+                    if (select.value === '') { 
+                        throw new Error("Incomplete Gen 3");
+                    }
                     // 보충역 또는 현역 복무중(병사)는 명문가 제외 사유 (병역명문가는 복무 완료 기준)
                     if (select.value === 'supplement' || select.value === 'serving_soldier') isFail = true;
                     
