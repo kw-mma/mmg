@@ -646,8 +646,13 @@ function toggleTooltip(id) {
             const gen3Services = document.querySelectorAll('.gen3-service');
             
             // 2. 필수 라디오 버튼 항목 검사
-            if (!q1 || !q4) {
-                showAlert('1대 조부 및 면탈 사유 등 필수 문항(Q1, Q4)에 답변해주세요.');
+            if (!q1) {
+                showAlert('문항 1번에 답변해주세요.');
+                return;
+            }
+
+            if (!q4) {
+                showAlert('문항 4번에 답변해주세요');
                 return;
             }
 
