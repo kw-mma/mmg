@@ -78,11 +78,11 @@
             </p>
 
             <!-- 시작 버튼 -->
-            <button onclick="startDiagnosis()" id="start-button" class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"> 자가진단 시작하기 </button>
+            <button onclick="startDiagnosis()" id="start-button" class="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"> 자가진단 시작하기 </button>
 			<!-- 제출서류 안내 -->
-            <button onclick="goToStep(4)"  class="w-full py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 제출서류안내 </button>
+            <button onclick="goToStep(4)"  class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 제출서류안내 </button>
 			<!-- 담당자 안내 -->
-            <button onclick="goToStep(5)"  class="w-full py-3 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 지방병무(지)청 담당자 연락처 </button>
+            <button onclick="goToStep(5)"  class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 지방병무(지)청 담당자 연락처 </button>
 
         </div>
 
@@ -260,7 +260,7 @@
                 선정 대상 및 제외 사유 상세 확인
             </button>
             <button onclick="calculateResult()"
-                    class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
+                    class="w-full py-2 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
                 결과 확인하기
             </button>
             <!-- 이전 단계로 가기 버튼 -->
@@ -285,7 +285,7 @@
             </div>
             
             <!-- 성공 시에만 표시되는 버튼 -->
-            <button class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md hidden" 
+            <button class="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md hidden" 
                     id="applicationBtn" onclick="goToStep(4)">
                 병역명문가 신청하기
             </button>
@@ -301,7 +301,7 @@
         </div>
         
         <!-- Step 4: Application Guide (신청 안내) -->
-        <div id="step4" class="step-content space-y-6 text-center">
+        <div id="step4" class="step-content space-y-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">병역명문가 신청 안내</h2>
             
             <!-- 1. 제출서류 안내 -->
@@ -328,13 +328,13 @@
             
             <!-- 2. 온라인 신청하기 버튼 (URL 유지) -->
             <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22402')"
-                    class="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
+                    class="w-full py-2 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
                 2. 온라인 신청하기 (바로가기)
             </button>
             
             <!-- 3. 우편/방문 신청하기 버튼 (URL 유지) -->
             <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22210')"
-                    class="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
+                    class="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out shadow-md">
                 3. 우편·방문 신청하기 (서식 다운로드)
             </button>
 
