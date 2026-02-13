@@ -166,7 +166,7 @@
                 
                 <label class="block font-bold text-gray-800 mb-2" for="gen2Count">2대(아들)는 총 몇 명인가요?</label>
                 <div class="flex items-center space-x-3">
-                    <input type="number" id="gen2Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center" min="1" placeholder="1" value="0">
+                    <input type="number" id="gen2Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center" min="1" placeholder="1" value="1">
                     <span class="text-gray-700">명</span>
                     <button class="flex-shrink-0 px-4 py-2 text-sm bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition" onclick="generateGen2Fields()">
                         인원수 저장
@@ -218,7 +218,7 @@
     <label class="block font-bold text-gray-800 mb-2" for="gen3Count">3대(손자)는 총 몇 명인가요?</label>
     
     <div class="flex items-center space-x-3">
-        <input type="number" id="gen3Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-400 outline-none" min="1" placeholder="1" value="0">
+        <input type="number" id="gen3Count" class="w-20 p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-400 outline-none" min="1" placeholder="1" value="1">
         <span class="text-gray-700">명</span>
         <button class="flex-shrink-0 px-4 py-2 text-sm bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-md" onclick="generateGen3Fields()">
             인원수 저장
@@ -775,8 +775,8 @@ function toggleTooltip(id) {
             const gen2Count = document.getElementById('gen2Count');
             const gen3Count = document.getElementById('gen3Count');
 
-            if (gen2Count) gen2Count.value = 0;
-            if (gen3Count) gen3Count.value = 0;
+            if (gen2Count) gen2Count.value = 1;
+            if (gen3Count) gen3Count.value = 1;
             
             // 요소가 존재하는지 확인 후 함수 호출
             if (document.getElementById('tbodyGen2')) generateGen2Fields(); 
