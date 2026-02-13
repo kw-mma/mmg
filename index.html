@@ -274,7 +274,7 @@
 
         <!-- Step 3: Result -->
         <div id="step3" class="step-content space-y-6 text-center">
-            <h3 class="text-lg font-bold text-blue-800 mb-3 text-right">자가진단 결과</h3>
+            <h3 class="text-lg font-bold text-blue-800 mb-3 text-left">자가진단 결과</h3>
             
             <div id="resultArea" class="space-y-4">
                 <!-- 결과 카드가 여기에 렌더링됨 -->
@@ -775,8 +775,8 @@ function toggleTooltip(id) {
             const gen2Count = document.getElementById('gen2Count');
             const gen3Count = document.getElementById('gen3Count');
 
-            if (gen2Count) gen2Count.value = 1;
-            if (gen3Count) gen3Count.value = 1;
+            if (gen2Count) gen2Count.value = 0;
+            if (gen3Count) gen3Count.value = 0;
             
             // 요소가 존재하는지 확인 후 함수 호출
             if (document.getElementById('tbodyGen2')) generateGen2Fields(); 
