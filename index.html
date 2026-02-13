@@ -664,9 +664,9 @@ function toggleTooltip(id) {
             try {
                 gen2Services.forEach(select => {
                     // 관계 또는 복무 상태를 선택하지 않은 경우
-                    //if (select.value === '' || select.closest('tr').querySelector('.gen2-rel').value === '') { 
-                        //throw new Error("Incomplete Gen 2");
-                    //}
+                    if (select.value === '') { 
+                        throw new Error("Incomplete Gen 2");
+                    }
                     // 방위병/보충역은 명문가 제외 사유
                     if (select.value === 'defense') isFail = true;
                     // '현역 복무중(장교,준·부사관)' 또는 '모름'은 추가 확인 필요
