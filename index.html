@@ -115,10 +115,9 @@
 
 
 			<div class="absolute top-3 right-3">
-				<div class="relative">
-				<button onclick="toggleTooltip('gen1Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
-                ?
-                </button>
+				<div class="flex items-right space-x-1 relative">
+				<span class="text-xs">기준확인</span>
+				<button onclick="toggleTooltip('gen1Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none"> ? </button>
            	 		<div id="gen1Tooltip" class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
                 		<p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 1대 범위 안내</p>
                 	<ul class="list-disc list-inside space-y-1 text-gray-600">
@@ -145,10 +144,10 @@
             
             <!-- 2대 인원 입력 ---------------------------------------------------------------------------------------------------------------------------------------------------------------->
 <div class="p-4 bg-yellow-50 rounded-lg border relative">
-    <div class="absolute top-3 right-3"> <div class="relative">
-		<button onclick="toggleTooltip('gen2Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
-                ?
-                </button>
+    <div class="absolute top-3 right-3"> 				<div class="flex items-right space-x-1 relative">
+				<span class="text-xs">기준확인</span>
+
+		<button onclick="toggleTooltip('gen2Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">?</button>
 
             <div id="gen2Tooltip" 
                  class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
@@ -173,6 +172,7 @@
                         인원수 저장
                     </button>
                 </div>
+                <label class="block text-gray-800 text-red-600 text-xs">숫자 입력 후 인원수 저장을 꼭 눌러주세요</label>
             </div>
 
 
@@ -200,10 +200,9 @@
             <!-- 3대 인원 입력 ------------------------------------------------------------------------------------------------------------------------------------>
 <div class="p-4 bg-yellow-50 rounded-lg border relative">
     <div class="absolute top-3 right-3">
-	<div class="relative">
-		<button onclick="toggleTooltip('gen3Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">
-                ?
-                </button>
+	<div class="flex items-right space-x-1 relative">
+	<span class="text-xs">기준확인</span>
+		<button onclick="toggleTooltip('gen3Tooltip')" class="w-5 h-5 bg-blue-400 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600 transition focus:outline-none">?</button>
            	 	<div id="gen3Tooltip" class="hidden absolute bottom-full mb-2 right-0 w-80 p-3 bg-white border border-blue-200 text-gray-700 text-s rounded-lg shadow-xl z-50 animate-fadeIn">
                 		<p class="font-bold text-blue-700 mb-1 underline decoration-blue-200">💡 3대 범위 안내</p>
                 <ul class="list-disc list-inside space-y-1 text-gray-600">
@@ -225,6 +224,7 @@
             인원수 저장
         </button>
     </div>
+    <label class="block text-gray-800 text-red-600 text-xs">숫자 입력 후 인원수 저장을 꼭 눌러주세요</label>
 </div>
 
                         
@@ -284,8 +284,9 @@
             
             <div id="failOrUnsureOptions" class="space-y-3 hidden">
                  <button class="w-full py-2 px-4 text-blue-600 font-semibold border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 ease-in-out" onclick="openModal('guideModal')">
-                     선정 대상 및 비대상 상세기준 보기
+                     선정 대상 및 제외 사유 상세 확인
                  </button>
+				<button onclick="goToStep(5)"  class="w-full py-2 px-4 bg-gray-300 text-gray-700 font-bold rounded-lg hover:hover:bg-gray-400 transition duration-150 ease-in-out shadow-md"> 지방병무(지)청 담당자 연락처 </button>
             </div>
             
             <!-- 성공 시에만 표시되는 버튼 -->
@@ -332,7 +333,7 @@
             <!-- 2. 온라인 신청하기 버튼 (URL 유지) -->
             <button onclick="openLink('https://mwpt.mma.go.kr/caisBMHS/index_mwps.jsp?menuNo=22402')"
                     class="w-full py-2 px-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-150 ease-in-out shadow-md">
-                온라인 신청하기 (바로가기)
+                온라인 신청하기 (병무청 앱)
             </button>
             
             <!-- 3. 우편/방문 신청하기 버튼 (URL 유지) -->
@@ -568,12 +569,9 @@
                     <td class="p-2">
                         <select class="gen2-service w-full p-1 border border-gray-300 rounded-md bg-white">
                             <option value="">복무 상태 선택</option>
-                            <!-- 현역 복무 완료(만기 전역) -->
                             <option value="active">현역 복무 완료(만기 전역)</option>
-                            <!-- 현역 복무중(장교,준·부사관) -->
-                            <option value="serving_officer_or_nco">현역 복무중(장교,준·부사관)</option>
-                            <!-- 방위병·보충역 (제외 사유) -->
-                            <option value="defense">방위병·공익(사회복무요원)</option>
+                            <option value="serving_officer_or_nco">현역 복무중(장교, 준·부사관)</option>
+                            <option value="defense">방위병·공익(사회복무요원) 등 보충역</option>
                             <option value="unknown">모름 / 해당 없음</option>
                         </select>
                     </td>
@@ -621,13 +619,10 @@ function toggleTooltip(id) {
                     <td class="p-2">
                         <select class="gen3-service w-full p-1 border border-gray-300 rounded-md bg-white">
                             <option value="">복무 상태 선택</option>
-                            <!-- 현역 복무 완료(만기 전역) -->
                             <option value="active">현역 복무 완료(만기 전역)</option>
-                            <option value="serving_officer">현역 복무중(장교·부사관)</option>
-                            <!-- 병사로 복무중인 경우 (복무 완료가 아니므로 제외 사유) -->
+                            <option value="serving_officer">현역 복무중(장교, 준·부사관)</option>
                             <option value="serving_soldier">현역 복무중(병사)</option>
-                            <!-- 보충역 (제외 사유) -->
-                            <option value="supplement">사회복무요원</option>
+                            <option value="supplement">사회복무요원 등 보충역</option>
                             <option value="unknown">모름 / 해당 없음</option>
                         </select>
                     </td>
