@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>병역이행안내 💎</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --bg-gray: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        body { font-family: 'Pretendard', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #fff; }
+        h2, h3 { color: #222; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+        
+        /* 탭 스타일 */
+        .tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; gap: 5px; }
+        .tab-btn { padding: 10px 20px; border: none; background: none; cursor: pointer; font-weight: 700; font-size: 16px; border-radius: 8px 8px 0 0; }
+        .tab-btn.active { background-color: var(--primary-color); color: white; }
+        .tab-content { display: none; padding: 20px 0; }
+        .tab-content.active { display: block; }
+
+        /* 익스팬더(아코디언) 스타일 */
+        .expander { border: 1px solid var(--border-color); border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+        .expander-header { background: var(--bg-gray); padding: 12px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
+        .expander-body { padding: 15px; display: none; border-top: 1px solid var(--border-color); }
+
+        /* 판독기/슬라이더 스타일 */
+        .card { background: var(--bg-gray); padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 5px solid var(--primary-color); }
+        .result-box { margin-top: 10px; padding: 10px; border-radius: 5px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        
+        select, input[type="range"] { width: 100%; padding: 10px; margin: 10px 0; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .sub-btn { padding: 10px; border: 1px solid var(--primary-color); background: #fff; cursor: pointer; border-radius: 5px; transition: 0.3s; }
+        .sub-btn:hover { background: var(--primary-color); color: #fff; }
+        
+        .link-btn { display: inline-block; padding: 10px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px; }
+        .top-link { text-align: right; font-size: 25pt; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<h2 id="top">병역처분결과를 설명해드립니다</h2>
+
+<div class="expander">
+    <div class="expander-header" onclick="toggleExpander(this)">😄 알려드립니다 <span>▼</span></div>
+    <div class="expander-body">
+        <p>병역판정검사(입영판정검사) 결과지 내용에 대해 궁금한 사항을 안내합니다.</p>
+        <img src="https://mma.go.kr/download/visual/CAIS_HPIS_202412020402149250.jpg" width="250" alt="안내 이미지">
+    </div>
+</div>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'tab1')">병역이행안내</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab2')">검사결과참고치</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab3')">바로가기➡️</button>
+</div>
+
+<div id="tab1" class="tab-content active">
+    <h3>🎯 병역처분결과 선택</h3>
+    <select id="dispositionSelect" onchange="showDispositionInfo()">
+        <option value="">병역처분결과를 선택하세요</option>
+        <option value="active">현역병입영대상</option>
+        <option value="social">사회복무요원소집대상</option>
+        <option value="labor">전시근로역</option>
+    </select>
+
+    <div id="dispositionInfo" class="card" style="display:none;">
+        <h4 id="infoTitle"></h4>
+        <p id="infoContent"></p>
+    </div>
+</div>
+
+<div id="tab2" class="tab-content">
+    <h3>검사결과 중 어떤 항목이 궁금하신가요?</h3>
+    <div class="btn-grid">
+        <button class="sub-btn" onclick="showChecker('blood')">혈압</button>
+        <button class="sub-btn" onclick="showChecker('ast')">AST</button>
+        <button class="sub-btn" onclick="showChecker('bmi')">체질량지수</button>
+    </div>
+
+    <div id="checker-blood" class="card checker" style="display:none;">
+        <h4>🩸 혈압 안내</h4>
+        <p>정상범위: 이완기 60~90 / 수축기 100~140</p>
+        이완기: <span id="v1-val">80</span> <input type="range" min="40" max="160" value="80" oninput="checkBlood(this.value, null)">
+        수축기: <span id="v2-val">120</span> <input type="range" min="40" max="160" value="120" oninput="checkBlood(null, this.value)">
+        <div id="blood-result" class="result-box success">🟢 정상입니다.</div>
+    </div>
+
+    <div id="checker-ast" class="card checker" style="display:none;">
+        <h4>🧪 AST 안내</h4>
+        <p>간 손상 시 수치가 증가합니다. 정상범위: 0 ~ 40 IU/L</p>
+        수치: <span id="ast-val">40</span> <input type="range" min="0" max="150" value="40" oninput="checkAST(this.value)">
+        <div id="ast-result" class="result-box success">🟢 정상입니다.</div>
+    </div>
+    
+    <div id="checker-bmi" class="card checker" style="display:none;">
+        <h4>⚖️ 체질량지수(BMI)</h4>
+        <p>신장과 체중의 비율을 사용한 객관적인 지수입니다.</p>
+        
+    </div>
+</div>
+
+<div id="tab3" class="tab-content">
+    <p>아래 링크를 누르시면 병무청 민원포털로 연결됩니다.</p>
+    <a href="https://mwpt.mma.go.kr" class="link-btn" target="_blank">병무청 앱 바로가기 ➡️</a>
+</div>
+
+<hr>
+<div style="text-align: right;"><a href="#top" class="top-link">🔝</a></div>
+<p style="text-align:center;"><b>강원지방병무청</b> (Updated on 2026. 03. 03.)</p>
+
+<script>
+    // 탭 전환 함수
+    function openTab(evt, tabId) {
+        const contents = document.getElementsByClassName("tab-content");
+        for (let content of contents) content.style.display = "none";
+        
+        const buttons = document.getElementsByClassName("tab-btn");
+        for (let btn of buttons) btn.classList.remove("active");
+        
+        document.getElementById(tabId).style.display = "block";
+        evt.currentTarget.classList.add("active");
+    }
+
+    // 익스팬더 토글
+    function toggleExpander(header) {
+        const body = header.nextElementSibling;
+        body.style.display = body.style.display === "block" ? "none" : "block";
+    }
+
+    // 병역처분 결과 안내 로직
+    function showDispositionInfo() {
+        const select = document.getElementById("dispositionSelect");
+        const infoDiv = document.getElementById("dispositionInfo");
+        const title = document.getElementById("infoTitle");
+        const content = document.getElementById("infoContent");
+
+        if(select.value === "") {
+            infoDiv.style.display = "none";
+            return;
+        }
+
+        infoDiv.style.display = "block";
+        if(select.value === "active") {
+            title.innerText = "🎯 현역병입영대상";
+            content.innerText = "육군 18개월 복무. 원하는 시기에 입영하려면 본인선택 신청이 필요합니다.";
+        } else if(select.value === "social") {
+            title.innerText = "🎯 사회복무요원소집대상";
+            content.innerText = "21개월 복무. 국가기관, 지자체, 사회복지시설 등에서 복무합니다.";
+        } else if(select.value === "labor") {
+            title.innerText = "🎯 전시근로역";
+            content.innerText = "군 복무 및 예비군 면제. 전시 군사지원 업무만 수행하며 민방위 교육을 받습니다.";
+        }
+    }
+
+    // 결과 판독기 표시 로직
+    function showChecker(type) {
+        const checkers = document.getElementsByClassName("checker");
+        for(let c of checkers) c.style.display = "none";
+        document.getElementById("checker-" + type).style.display = "block";
+    }
+
+    // 혈압 실시간 판정
+    let v1 = 80, v2 = 120;
+    function checkBlood(val1, val2) {
+        if(val1) { v1 = val1; document.getElementById("v1-val").innerText = v1; }
+        if(val2) { v2 = val2; document.getElementById("v2-val").innerText = v2; }
+        
+        const res = document.getElementById("blood-result");
+        if (v1 >= 60 && v1 <= 90 && v2 >= 100 && v2 <= 140) {
+            res.innerText = "🟢 정상입니다.";
+            res.className = "result-box success";
+        } else {
+            res.innerText = "🔴 이상입니다 (추가 검사 권장).";
+            res.className = "result-box error";
+        }
+    }
+
+    // AST 실시간 판정
+    function checkAST(val) {
+        document.getElementById("ast-val").innerText = val;
+        const res = document.getElementById("ast-result");
+        if (val <= 40) {
+            res.innerText = "🟢 정상입니다.";
+            res.className = "result-box success";
+        } else {
+            res.innerText = "🔴 이상입니다.";
+            res.className = "result-box error";
+        }
+    }
+</script>
+
+</body>
+</html>
