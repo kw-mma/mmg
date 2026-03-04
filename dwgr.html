@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동원훈련 탑승정보 조회</title>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Pretendard', -apple-system, sans-serif; padding: 20px; max-width: 500px; margin: 0 auto; color: #333; line-height: 1.6; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: #1e1e1e; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; display: none; }
+        .success-box { background-color: #d4edda; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #c3e6cb; }
+        .bus-no { font-size: 35px; font-weight: bold; color: #0b5394; display: block; margin: 10px 0; }
+        .error { color: #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 14px; display: none; }
+        .notice { background-color: #f8f9fa; padding: 15px; border-radius: 8px; font-size: 13px; margin-top: 30px; border-left: 4px solid #dee2e6; }
+    </style>
+</head>
+<body>
+
+    <h2>🚍 동원훈련 탑승정보 조회</h2>
+
+    <div class="input-group">
+        <label for="name">이름</label>
+        <input type="text" id="name" placeholder="이름 입력 (예: 홍길동)" maxlength="4">
+    </div>
+
+    <div class="input-group">
+        <label for="phone">전화번호 뒷자리 (4자리)</label>
+        <input type="tel" id="phone" placeholder="4자리 숫자 입력" maxlength="4">
+    </div>
+
+    <button onclick="fetchBusInfo()">버스정보 조회하기</button>
+
+    <div id="error-msg" class="error"></div>
+
+    <div id="result">
+        <div class="success-box">
+            <span id="res-name" style="font-size:16px; color:#155724;"></span>님께서 승차하실 버스번호는
+            <span class="bus-no" id="res-busno"></span>
+            입니다.
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>📢 공지사항</strong><br>
+        - 본 서비스는 동원훈련 탑승버스 조회 전용입니다.<br>
+        - 개인정보 보호를 위해 불필요한 정보는 저장하지 않으며, 모든 내용은 익명으로 처리됩니다.<br>
+        - 문제가 발생하면 직원에게 문의하세요.
+    </div>
+
+    <script>
+        // 1. Supabase 설정 (본인의 정보로 변경하세요)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchBusInfo() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const errorDiv = document.getElementById('error-msg');
+            const resultDiv = document.getElementById('result');
+
+            // 초기화
+            errorDiv.style.display = 'none';
+            resultDiv.style.display = 'none';
+
+            // 2. 유효성 검사 (Streamlit 로직과 동일)
+            if (!name || !phone) {
+                showError("이름과 전화번호 뒷자리를 모두 입력해주세요.");
+                return;
+            }
+            if (isNaN(phone)) {
+                showError("전화번호 뒷자리는 숫자만 입력 가능합니다.");
+                return;
+            }
+            if (name.length < 2) {
+                showError("이름은 두글자 이상 입력해주세요.");
+                return;
+            }
+            if (phone.length !== 4) {
+                showError("전화번호 뒷자리는 4자리로 입력해주세요.");
+                return;
+            }
+
+            const phone3 = phone.substring(1); // phone[-3:] 와 동일
+            let query = _supabase.table('businfo').select('*');
+
+            // 3. 이름 마스킹 로직 적용
+            if (name.length >= 3) {
+                const first = name[0];
+                const third = name[2];
+                // '홍_동' 형태의 like 쿼리
+                query = query.like('name', `${first}_${third}`).eq('phone', phone3);
+            } else if (name.length === 2) {
+                const first = name[0];
+                const third = "O";
+                // '홍O' 형태의 like 쿼리
+                query = query.like('name', `${first}${third}`).eq('phone', phone3);
+            }
+
+            try {
+                const { data, error } = await query;
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    showError("일치하는 정보가 없습니다.");
+                } else if (data.length > 1) {
+                    showError("중복 데이터가 있습니다. 직원에게 문의하세요.");
+                } else {
+                    // 결과 표시
+                    document.getElementById('res-name').innerText = name;
+                    document.getElementById('res-busno').innerText = data[0].busno + " 호차";
+                    resultDiv.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                showError("데이터 조회 중 오류가 발생했습니다.");
+            }
+        }
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('error-msg');
+            errorDiv.innerText = msg;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
